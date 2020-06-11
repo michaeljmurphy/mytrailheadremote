@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AuthProvider xmlns="http://soap.sforce.com/2006/04/metadata">
+    <authorizeUrl>https://mhindu.my.salesforce.com/services/oauth2/authorize</authorizeUrl>
+    <consumerKey>3MVG96hCAx1bhPagLd_6IXZGwsRk7c7UzeH0bqkHEXi3_Nd5_JoOu7JbxuQ5eoJICS9FYn7GRL5ovkBqEH1Ar</consumerKey>
+    <consumerSecret>gjwQ79MwGqCCV/kZ/olaiBleGCWiNwuUTKRAcO8/pnNMNhgMp1oH6gbEsHeZe0Qrx3IjopFiKfJo08flYZ9cE3BBGPdiC2rX</consumerSecret>
+    <friendlyName>myth_org</friendlyName>
+    <includeOrgIdInIdentifier>true</includeOrgIdInIdentifier>
+    <providerType>Salesforce</providerType>
+    <sendAccessTokenInHeader>false</sendAccessTokenInHeader>
+    <sendClientCredentialsInHeader>false</sendClientCredentialsInHeader>
+    <sendSecretInApis>true</sendSecretInApis>
+    <tokenUrl>https://mhindu.my.salesforce.com/services/oauth2/token</tokenUrl>
+</AuthProvider>

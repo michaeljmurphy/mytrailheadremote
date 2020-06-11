@@ -1,0 +1,8 @@
+select 
+id
+, trailheadapp__user__c
+, trailheadapp__user__r.FirstName
+, trailheadapp__user__r.LastName
+, trailheadapp__trailmix__c
+, trailheadapp__trailmix__r.Name
+from trailheadapp__trailmix_assignment__c
