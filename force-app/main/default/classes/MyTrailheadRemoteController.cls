@@ -30,17 +30,39 @@ public with sharing class MyTrailheadRemoteController {
     }
 
     @AuraEnabled(cacheable = true)
-    public static List<User> getAllUsers() {
+    public static List<User> getUsers(String searchString) {
         MyTrailheadRemoteController c = new MyTrailheadRemoteController();
 
         // @todo: custom label
         String GET_USERS_FAILURE = 'There was a problem getting the users!';
 
-        String QUERY = 'select id, firstname, lastname from user';
+        String QUERY = String.escapeSingleQuotes(searchString);
         String URI = '/services/data/'
             + API
-            + '/query/?q=';
-        HttpResponse res = c.calloutToMyThOrg('' + URI + QUERY, 'GET', null);
+            + '/parameterizedSearch';
+        
+        // @todo: serialise this properly
+        JSONGenerator gen = JSON.createGenerator(true);
+        gen.writeStartObject(); 
+        gen.writeStringField('q', QUERY);
+        gen.writeFieldName('sobjects');
+        gen.writeStartArray(); // start of sobject array
+        gen.writeStartObject(); // start of sobject
+        gen.writeStringField('name', 'User');
+        gen.writeFieldName('fields');
+        gen.writeStartArray(); // start of field array
+
+        gen.writeString('Id');
+        gen.writeString('FirstName'); // @todo: parameterise / data drive this
+        gen.writeString('LastName');
+
+        gen.writeEndArray(); // end of field array
+        gen.writeEndObject(); // end of sobject
+        gen.writeEndArray(); // end of sobject array
+        gen.writeEndObject(); // end of json
+
+
+        HttpResponse res = c.calloutToMyThOrg('' + URI + QUERY, 'POST', gen.getAsString());
 
         try {
             return (List<User>) System.JSON.deserialize(res.getBody(), List<User>.class);
