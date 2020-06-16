@@ -1,3 +1,17 @@
 <template>
-    
+  <div class ="slds-m-top_medium slds-m-bottom_x-large">
+    <template if:true={results}>
+      <template for:each={results} for:item="i">
+        <li class="slds-item" key={i.Id}>
+          <lightning-tile label={i.Name}>
+            <lightning-avatar src="/"
+                              fallback-icon-name="standard:personaccount"
+                              alternative-text={i.Name}>
+              
+            </lightning-avatar>
+          </lightning-tile>
+        </li>
+      </template>
+    </template>
+  </div>
 </template>

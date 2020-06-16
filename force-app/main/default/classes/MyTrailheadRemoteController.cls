@@ -15,7 +15,7 @@ public with sharing class MyTrailheadRemoteController {
 
     public HttpResponse calloutToMyThOrg(String uri, String verb, String body) {
         HttpRequest req = new HttpRequest();
-        String NAMEDCREDENTIAL = 'callout://mythorg';
+        String NAMEDCREDENTIAL = 'callout:myth_org';
         req.setEndpoint(NAMEDCREDENTIAL + uri);
         req.setMethod(verb);
 
@@ -26,6 +26,7 @@ public with sharing class MyTrailheadRemoteController {
         
         Http http = new Http();
         HttpResponse res = http.send(req);
+        System.debug('Response body: ' + res.getBody());
         return res;
     }
 
@@ -62,7 +63,7 @@ public with sharing class MyTrailheadRemoteController {
         gen.writeEndObject(); // end of json
 
 
-        HttpResponse res = c.calloutToMyThOrg('' + URI + QUERY, 'POST', gen.getAsString());
+        HttpResponse res = c.calloutToMyThOrg(URI, 'POST', gen.getAsString());
 
         try {
             return (List<User>) System.JSON.deserialize(res.getBody(), List<User>.class);
@@ -72,24 +73,42 @@ public with sharing class MyTrailheadRemoteController {
     }
 
     @AuraEnabled(cacheable = true)
-    public static String getAllTrailmixes() {
+    public static String getTrailmixes(String searchString) {
         MyTrailheadRemoteController c = new MyTrailheadRemoteController();
 
         // @todo: custom label
         String GET_TRAILMIX_FAILURE = 'There was a problem getting the trailmixes!';
 
-        String QUERY = 'select id'
-            + ', name'
-            + ', trailheadapp__description__c'
-            + ', isLocked'
-            + ', trailheadapp__archived__c'
-            + ', trailheadapp__url__c'
-            + ' from trailheadapp__trailmix__c'
-            + ' where isLocked = false and trailheadapp__archived__c = false';
+        String QUERY = String.escapeSingleQuotes(searchString);
         String URI = '/services/data/'
             + API
-            + '/query/?q=';
-        HttpResponse res = c.calloutToMyThOrg('' + URI + QUERY, 'GET', null);
+            + '/parameterizedSearch';
+        
+        // @todo: serialise this properly
+        JSONGenerator gen = JSON.createGenerator(true);
+        gen.writeStartObject(); 
+        gen.writeStringField('q', QUERY);
+        gen.writeFieldName('sobjects');
+        gen.writeStartArray(); // start of sobject array
+        gen.writeStartObject(); // start of sobject
+        gen.writeStringField('name', 'trailheadapp__trailmix__c');
+        gen.writeFieldName('fields');
+        gen.writeStartArray(); // start of field array
+
+        gen.writeString('Id');
+        gen.writeString('name');
+        gen.writeString('trailheadapp__description__c');
+        gen.writeString('isLocked');
+        gen.writeString('trailheadapp__archived__c');
+        gen.writeString('trailheadapp__url__c');
+
+
+        gen.writeEndArray(); // end of field array
+        gen.writeEndObject(); // end of sobject
+        gen.writeEndArray(); // end of sobject array
+        gen.writeEndObject(); // end of json
+
+        HttpResponse res = c.calloutToMyThOrg(URI, 'POST', gen.getAsString());
 
         try {
             return res.getBody(); // I don't want to create a wrapper object to deserialise into
@@ -118,7 +137,7 @@ public with sharing class MyTrailheadRemoteController {
         String URI = '/services/data/'
             + API
             + '/query/?q=';
-        HttpResponse res = c.calloutToMyThOrg('' + URI + QUERY, 'GET', null);
+        HttpResponse res = c.calloutToMyThOrg(URI + QUERY, 'GET', null);
 
         try {
             return res.getBody(); // I don't want to create a wrapper object to deserialise into

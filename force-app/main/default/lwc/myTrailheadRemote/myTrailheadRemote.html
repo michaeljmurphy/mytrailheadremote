@@ -1,13 +1,22 @@
 <template>
   <lightning-card title="Trailmix Remote Control">
+
     <!-- search component -->
-    Search Component Goes Here
+    <c-my-trailhead-remote-search search-target={target}>
+    </c-my-trailhead-remote-search>
 
     <!-- results component -->
-    Results Component Goes here
+    <!-- <c-my-trailhead-remote-results step={step} results={searchResults} onuserselect={selectUserResultHandler}> -->
+      
+    <!-- </c-my-trailhead-remote-results> -->
     
     <!-- button area  -->
-    Buttons go here
-
+    <lightning-button-group>
+      <lightning-button label="Cancel" onclick={cancelHandler}></lightning-button>
+      <template if:true={isTrailmixTarget}>
+        <lightning-button label="Previous" onclick={previousHandler}></lightning-button>
+      </template>
+      <lightning-button label="Next" onclick={nextHandler}></lightning-button>
+    </lightning-button-group>
   </lightning-card>
 </template>
