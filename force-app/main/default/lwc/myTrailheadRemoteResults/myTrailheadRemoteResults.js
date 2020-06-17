@@ -6,7 +6,15 @@ export default class MyTrailheadRemoteResults extends LightningElement {
     
     selectResultHandler(event) {
         event.preventDefault();
-        this.dispatchEvent(new CustomEvent('select'), { detail: { "selected" :  event.detail } } );
+        console.log("Selected: ", event.target.name);
+
+        let selectedRecord = this.displayResults.find(i => {
+            return i.Id === event.target.name; 
+        });
+
+        console.log("Which means: ", selectedRecord);
+
+        this.dispatchEvent(new CustomEvent('select', { detail: { "selected" :   selectedRecord } } ) );
     }
 
     get results() {}
@@ -17,6 +25,13 @@ export default class MyTrailheadRemoteResults extends LightningElement {
             console.log("results setter: ", JSON.stringify(value));
             this.displayResults = JSON.parse(JSON.stringify(value));
             this.displayResults = this.displayResults.users;
+
+            this.displayResults.forEach((e, i, a) => {
+                this.displayResults[i]["Name"] = this.displayResults[i].FirstName
+                    + " "
+                    + this.displayResults[i].LastName;
+            });
+            
             console.log("displayResults: ", this.displayResults);
         }
     }

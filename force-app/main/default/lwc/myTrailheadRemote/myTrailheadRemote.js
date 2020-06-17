@@ -13,12 +13,12 @@ export default class MyTrailheadRemote extends LightningElement {
 
 
     searchResultHandler(event) {
-        console.log('parent ', JSON.stringify(event.detail.users));
+        console.log('parent search result: ', JSON.stringify(event.detail.users));
         this.searchResults = event.detail;
     }
 
     selectResultHandler(event) {
-        console.log('parent ', event.detail);
+        console.log('parent select result: ', JSON.stringify(event.detail));
     }
 
     cancelHandler() {
