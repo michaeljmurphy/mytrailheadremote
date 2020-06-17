@@ -1,29 +1,63 @@
 <template>
-  <lightning-card title="Trailmix Remote Control">
+  <lightning-card>
+    <h3 slot="title">
+      <lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
+      Trailmix Assignment Remote
+    </h3>
+
 
     <!-- search component -->
     <c-my-trailhead-remote-search search-target={target} onsearch={searchResultHandler}>
     </c-my-trailhead-remote-search>
 
+    <div class="slds-p-horizontal_small">
+      <!-- selected component -->
+      <lightning-tile label="Selected Users">
+        <template for:each={selectedUserPills} for:item="i">
+          <lightning-pill label={i.label} name={i.name} key={i.name}>
+            <lightning-avatar src="/"
+                              fallback-icon-name="standard:user"
+                              variant="circle"
+                              alternative-text="User avatar"></lightning-avatar>
+          </lightning-pill>
+        </template>
+      </lightning-tile>
+
+
+
+      <!-- selected component -->
+      <lightning-tile label="Selected Trailmixes">
+        <template for:each={selectedTrailmixPills} for:item="i">
+          <lightning-pill label={i.label} name={i.name} key={i.name}>
+            <lightning-avatar src="/" 
+                              fallback-icon-name="standard:coaching" 
+                              variant="circle"  
+                              alternative-text="User avatar"></lightning-avatar>
+          </lightning-pill>
+        </template>
+      </lightning-tile>
+    </div>
+    
     <!-- results component -->
     <c-my-trailhead-remote-results result-target={target} results={searchResults} onselect={selectResultHandler}>
     </c-my-trailhead-remote-results>
     
     <!-- button area  -->
-    <lightning-button-group>
-      <lightning-button label="Cancel" onclick={cancelHandler}></lightning-button>
-      <template if:true={isTrailmixTarget}>
-        <lightning-button label="Previous" onclick={previousHandler}></lightning-button>
-      </template>
+    <div slot="actions">
+      <lightning-button-group>
+        <lightning-button label="Cancel" onclick={cancelHandler}></lightning-button>
+        <template if:true={isTrailmixTarget}>
+          <lightning-button label="Previous" onclick={previousHandler}></lightning-button>
+        </template>
 
-      <template if:true={isNotTrailmixTarget}>
-      <lightning-button label="Next" onclick={nextHandler}></lightning-button>
-      </template>
+        <template if:true={isNotTrailmixTarget}>
+          <lightning-button label="Next" onclick={nextHandler}></lightning-button>
+        </template>
 
-      <template if:true={isTrailmixTarget}>
-        <lightning-button label="Submit" onclick={submitHandler}></lightning-button>
-      </template>
-
-    </lightning-button-group>
+        <template if:true={isTrailmixTarget}>
+          <lightning-button label="Submit" onclick={submitHandler} variant="destructive"></lightning-button>
+        </template>
+      </lightning-button-group>
+    </div>
   </lightning-card>
 </template>

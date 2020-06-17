@@ -1,4 +1,6 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, wire, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+
 import insertTrailmixAssignments from '@salesforce/apex/MyTrailheadRemoteController.insertTrailmixAssignments';
 
 export default class MyTrailheadRemote extends LightningElement {
@@ -6,6 +8,10 @@ export default class MyTrailheadRemote extends LightningElement {
     searchResults;
     selectedUsers = [];
     selectedTrailmixes = [];
+    @track
+    selectedUserPills = [];
+    @track
+    selectedTrailmixPills = [];
     isTrailmixTarget = false;
     target;
 
@@ -28,7 +34,19 @@ export default class MyTrailheadRemote extends LightningElement {
 
             this.selectedUsers = this.selectedUsers.filter((v,i,a) => a.findIndex(t => (t.id === v.id)) === i);
             
+            this.selectedUserPills.push({
+                type: "avatar"
+                , label: event.detail.name
+                , id: event.detail.id
+                , src: "/"
+                , fallbackIconName: "standard:user"
+                , variant: "circle"
+                , alternativeText: "User avatar"
+            });
+            this.selectedUserPills = this.selectedUserPills.filter((v,i,a) => a.findIndex(t => (t.id === v.id)) === i);
+            
             console.log("selectedUsers: ", this.selectedUsers);
+            console.log("selectedUserPills: ", this.selectedUserPills);
         } else if (this.target === "trailmixes") {
             this.selectedTrailmixes.push({
                 "name" : event.detail.name
@@ -36,12 +54,28 @@ export default class MyTrailheadRemote extends LightningElement {
             });
             this.selectedTrailmixes = this.selectedTrailmixes.filter((v,i,a) => a.findIndex(t => (t.id === v.id)) === i);
 
+            this.selectedTrailmixPills.push({
+                type: "avatar"
+                , label: event.detail.name
+                , id: event.detail.id
+                , src: "/"
+                , fallbackIconName: "standard:coaching"
+                , variant: "circle"
+                , alternativeText: "Trailmix avatar"
+            });
+            this.selectedTrailmixPills = this.selectedTrailmixPills.filter((v,i,a) => a.findIndex(t => (t.id === v.id)) === i);
+
             console.log("selectedTrailmixes: ", this.selectedTrailmixes);
         }
     }
 
     cancelHandler() {
         // err do stuff
+        this.target = "users";
+
+        // clean up selectedTrailmixList
+        this.selectedTrailmixes = {};
+        this.isTrailmixTarget = false;
     }
 
     previousHandler() {
@@ -85,9 +119,22 @@ export default class MyTrailheadRemote extends LightningElement {
             tmixAssignments : JSON.stringify(_requestBody)
         }).then(() => {
             // pass
-            console.log("it should have worked");
+            const event = new ShowToastEvent({
+                "title"  : "Probable Success!"
+                , "message" : "Records created"
+            });
+            this.dispatchEvent(event);
         }).catch((error) => {
             console.log(error.body.message);
+            // pass
+            const event = new ShowToastEvent({
+                "title"  : "Error!"
+                , "message" : "{0}"
+                , "messageData" : [
+                    error.body.message
+                ]
+            });
+            this.dispatchEvent(event);
         });
     }
     

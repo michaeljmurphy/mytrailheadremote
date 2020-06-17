@@ -28,6 +28,10 @@ export default class MyTrailheadRemoteResults extends LightningElement {
     
     get results() {}
 
+    get isTrailmixTarget() {
+        return this._resultTarget === "trailmixes";
+    }
+
     @api
     set results(value) {
         if (!value) {
