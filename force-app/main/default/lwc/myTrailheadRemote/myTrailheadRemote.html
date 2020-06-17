@@ -2,13 +2,12 @@
   <lightning-card title="Trailmix Remote Control">
 
     <!-- search component -->
-    <c-my-trailhead-remote-search search-target={target}>
+    <c-my-trailhead-remote-search search-target={target} onsearch={searchResultHandler}>
     </c-my-trailhead-remote-search>
 
     <!-- results component -->
-    <!-- <c-my-trailhead-remote-results step={step} results={searchResults} onuserselect={selectUserResultHandler}> -->
-      
-    <!-- </c-my-trailhead-remote-results> -->
+    <c-my-trailhead-remote-results result-target={target} results={searchResults} onselect={selectResultHandler}>
+    </c-my-trailhead-remote-results>
     
     <!-- button area  -->
     <lightning-button-group>

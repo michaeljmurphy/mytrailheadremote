@@ -1,17 +1,22 @@
 <template>
-  <div class ="slds-m-top_medium slds-m-bottom_x-large">
-    <template if:true={results}>
-      <template for:each={results} for:item="i">
-        <li class="slds-item" key={i.Id}>
-          <lightning-tile label={i.Name}>
-            <lightning-avatar src="/"
-                              fallback-icon-name="standard:personaccount"
-                              alternative-text={i.Name}>
-              
-            </lightning-avatar>
-          </lightning-tile>
-        </li>
-      </template>
+  <div class ="slds-p-around_medium lgc_bg">
+    <template if:true={displayResults}>
+      <ul class="slds-has-dividers_bottom-space">
+        <template for:each={displayResults} for:item="i">
+          <li class="slds-item" key={i.Id}>
+            <lightning-tile label={i.FirstName} onclick={selectResultHandler}>
+              <lightning-avatar src="https://www.lightningdesignsystem.com/assets/images/avatar2.jpg"
+                                fallback-icon-name="standard:person_account"
+                                alternative-text={i.FirstName}>
+              </lightning-avatar>
+              <ul class="slds-list_horizontal slds-has-dividers_right">
+                <li class="slds-item">{i.FirstName} {i.LastName}</li>
+                <li class="slds-item">{i.Email}</li>
+              </ul>
+            </lightning-tile>
+          </li>
+        </template>
+      </ul>
     </template>
   </div>
 </template>

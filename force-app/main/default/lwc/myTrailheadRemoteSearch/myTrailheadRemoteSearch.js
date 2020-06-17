@@ -21,8 +21,12 @@ export default class MyTrailheadRemoteSearch extends LightningElement {
             this.results = undefined;
             console.log("error: " + this.error);
         } else if (data) {
-            this.results = data;
-            console.log(data);
+            let localResults = JSON.parse(data);
+            console.log('search results: ', localResults);
+            console.log(JSON.stringify(localResults.searchRecords));
+            this.results = localResults.searchRecords;
+            const resultsEvent = new CustomEvent('search', { detail: { "users" : localResults.searchRecords } });
+            this.dispatchEvent(resultsEvent);
         }
     }
 
@@ -38,15 +42,27 @@ export default class MyTrailheadRemoteSearch extends LightningElement {
             this.results = undefined;
             console.log("error: " + this.error);
         } else if (data) {
-            this.results = data;
-            console.log(data);
+            this.results = JSON.parse(data);
+            console.log('search results: ', this.results);
+
+
+
+            let localResults = [];
+
+            for (let i in this.results.searchRecords) {
+                localResults.push(i);
+            }
+
+            this.results = localResults;
+
+            const resultsEvent = new CustomEvent('search', { detail: localResults });
+            this.dispatchEvent(resultsEvent);
         }
     }
     
     searchHandler(event) {
         const isEnterKey = event.keyCode === 13;
         console.log('searchHandler');
-        console.log('keyCode: ' + event.keyCode);
         if (isEnterKey) {
             console.log('isEnterKey');
             console.log('searchTarget: ' + this.searchTarget);

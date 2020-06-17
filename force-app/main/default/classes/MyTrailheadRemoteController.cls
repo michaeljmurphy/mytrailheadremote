@@ -31,7 +31,7 @@ public with sharing class MyTrailheadRemoteController {
     }
 
     @AuraEnabled(cacheable = true)
-    public static List<User> getUsers(String searchString) {
+    public static String getUsers(String searchString) {
         MyTrailheadRemoteController c = new MyTrailheadRemoteController();
 
         // @todo: custom label
@@ -56,6 +56,7 @@ public with sharing class MyTrailheadRemoteController {
         gen.writeString('Id');
         gen.writeString('FirstName'); // @todo: parameterise / data drive this
         gen.writeString('LastName');
+        gen.writeString('Email');
 
         gen.writeEndArray(); // end of field array
         gen.writeEndObject(); // end of sobject
@@ -66,7 +67,7 @@ public with sharing class MyTrailheadRemoteController {
         HttpResponse res = c.calloutToMyThOrg(URI, 'POST', gen.getAsString());
 
         try {
-            return (List<User>) System.JSON.deserialize(res.getBody(), List<User>.class);
+            return res.getBody();
         } catch (Exception e) {
             throw new MyTrailheadRemoteController.MyTrailheadRemoteControllerException(GET_USERS_FAILURE);
         }
