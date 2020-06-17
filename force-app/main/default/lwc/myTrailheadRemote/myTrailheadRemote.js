@@ -1,6 +1,8 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
+import insertTrailmixAssignments from '@salesforce/apex/MyTrailheadRemoteController.insertTrailmixAssignments';
 
 export default class MyTrailheadRemote extends LightningElement {
+    trailmixAssignments;
     searchResults;
     selectedUsers = [];
     selectedTrailmixes = [];
@@ -56,9 +58,40 @@ export default class MyTrailheadRemote extends LightningElement {
     }
 
     submitHandler() {
-        
-    }
+        let _requestBody = {};
+        let _trailmixAssignments = [];
 
+        // construct lots of objects to pass to apex
+        this.selectedUsers.forEach((e, i, a) => {
+            this.selectedTrailmixes.forEach((ek, ik, ak) => {
+                _trailmixAssignments.push({
+                    "attributes" : {
+                        "type" : "trailheadapp__Trailmix_Assignment__c"
+                        , "referenceId" : e.id + ":" + ek.id
+                    }
+                    , "trailheadapp__User__c" : e.id
+                    , "trailheadapp__Trailmix__c" : ek.id
+                });
+            });
+        });
+
+        this.trailmixAssignments = _trailmixAssignments;
+
+        _requestBody = {
+            "records" : _trailmixAssignments
+        };
+        
+        insertTrailmixAssignments({
+            tmixAssignments : JSON.stringify(_requestBody)
+        }).then(() => {
+            // pass
+            console.log("it should have worked");
+        }).catch((error) => {
+            console.log(error.body.message);
+        });
+    }
+    
+    
     get isNotTrailmixTarget() {
         return !this.isTrailmixTarget;
     }

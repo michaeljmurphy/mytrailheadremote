@@ -146,13 +146,13 @@ public with sharing class MyTrailheadRemoteController {
             throw new MyTrailheadRemoteController.MyTrailheadRemoteControllerException(GET_TMIX_ASSIGNMENT_FAILURE);
         }
     }
-
+    
     @AuraEnabled(cacheable = true)
-    public static Boolean insertTrailmixAssignment(String tmixAssignments) {
+    public static Boolean insertTrailmixAssignments(String tmixAssignments) {
         MyTrailheadRemoteController c = new MyTrailheadRemoteController();
         String URI = '/services/data/'
             + API
-            + 'sobjects/trailheadapp__Trailmix_Assignment__c';
+            + '/composite/tree/trailheadapp__Trailmix_Assignment__c';
 
         HttpResponse res = c.calloutToMyThOrg(URI, 'POST', tmixAssignments);
 

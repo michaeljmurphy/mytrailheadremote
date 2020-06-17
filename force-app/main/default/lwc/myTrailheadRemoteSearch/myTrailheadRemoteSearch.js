@@ -67,6 +67,6 @@ export default class MyTrailheadRemoteSearch extends LightningElement {
     }
 
     get searchLabel() {
-        return "Enter a search string for " + this.searchTarget + " and press the 'ENTER' key to search";
+        return "Enter a search string for " + this.searchTarget.toUpperCase() + " and press the 'RET' key to search";
     }
 }
