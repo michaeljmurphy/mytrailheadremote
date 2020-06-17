@@ -3,7 +3,7 @@ import getUsers from '@salesforce/apex/MyTrailheadRemoteController.getUsers';
 import getTrailmixes from '@salesforce/apex/MyTrailheadRemoteController.getTrailmixes';
 
 export default class MyTrailheadRemoteSearch extends LightningElement {
-    @api searchTarget;
+    @api searchTarget = "users";
     userSearchString;
     trailmixSearchString;
     results;
@@ -23,7 +23,6 @@ export default class MyTrailheadRemoteSearch extends LightningElement {
         } else if (data) {
             let localResults = JSON.parse(data);
             console.log('search results: ', localResults);
-            console.log(JSON.stringify(localResults.searchRecords));
             this.results = localResults.searchRecords;
             const resultsEvent = new CustomEvent('search', { detail: { "users" : localResults.searchRecords } });
             this.dispatchEvent(resultsEvent);
@@ -42,20 +41,10 @@ export default class MyTrailheadRemoteSearch extends LightningElement {
             this.results = undefined;
             console.log("error: " + this.error);
         } else if (data) {
-            this.results = JSON.parse(data);
-            console.log('search results: ', this.results);
-
-
-
-            let localResults = [];
-
-            for (let i in this.results.searchRecords) {
-                localResults.push(i);
-            }
-
-            this.results = localResults;
-
-            const resultsEvent = new CustomEvent('search', { detail: localResults });
+            let localResults = JSON.parse(data);
+            console.log('search results: ', localResults);
+            this.results = localResults.searchRecords;
+            const resultsEvent = new CustomEvent('search', { detail: { "users" : localResults.searchRecords } });
             this.dispatchEvent(resultsEvent);
         }
     }
@@ -75,5 +64,9 @@ export default class MyTrailheadRemoteSearch extends LightningElement {
                 console.log('trailmixSearchString: ' + event.target.value);
             }
         }
-    }    
+    }
+
+    get searchLabel() {
+        return "Enter a search string for " + this.searchTarget + " and press the 'ENTER' key to search";
+    }
 }
