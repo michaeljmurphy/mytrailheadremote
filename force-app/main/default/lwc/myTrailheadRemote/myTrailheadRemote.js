@@ -28,8 +28,13 @@ export default class MyTrailheadRemote extends LightningElement {
             
             console.log("selectedUsers: ", this.selectedUsers);
         } else if (this.target === "trailmixes") {
-            // selectedTrailmixes.push(event.detail.selected);
-            // console.log("selectedTrailMixes: ", selectedTrailmixes);
+            this.selectedTrailmixes.push({
+                "name" : event.detail.name
+                , "id" : event.detail.id
+            });
+            this.selectedTrailmixes = this.selectedTrailmixes.filter((v,i,a) => a.findIndex(t => (t.id === v.id)) === i);
+
+            console.log("selectedTrailmixes: ", this.selectedTrailmixes);
         }
     }
 
@@ -48,5 +53,13 @@ export default class MyTrailheadRemote extends LightningElement {
     nextHandler() {
         this.target = "trailmixes"; // next step
         this.isTrailmixTarget = true;
+    }
+
+    submitHandler() {
+        
+    }
+
+    get isNotTrailmixTarget() {
+        return !this.isTrailmixTarget;
     }
 }

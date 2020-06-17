@@ -1,7 +1,7 @@
 import { LightningElement, api } from 'lwc';
 
 export default class MyTrailheadRemoteResults extends LightningElement {
-    @api resultTarget;
+    _resultTarget;
     displayResults;
     
     selectResultHandler(event) {
@@ -18,6 +18,14 @@ export default class MyTrailheadRemoteResults extends LightningElement {
                                                                  , "id" : selectedRecord.Id } } ) ) ;
     }
 
+    get resultTarget() {}
+    
+    @api
+    set resultTarget(value) {
+        this.displayResults = [];
+        this._resultTarget = value;
+    }
+    
     get results() {}
 
     @api
@@ -31,7 +39,7 @@ export default class MyTrailheadRemoteResults extends LightningElement {
         this.displayResults = JSON.parse(JSON.stringify(value));
         this.displayResults = this.displayResults.users;
 
-        if(this.resultTarget === "users") {
+        if(this._resultTarget === "users") {
             this.displayResults.forEach((e, i, a) => {
                 this.displayResults[i]["Name"] = this.displayResults[i].FirstName
                     + " "
@@ -43,9 +51,8 @@ export default class MyTrailheadRemoteResults extends LightningElement {
     }
 
     connectedCallback() {
-        if(this.resultTarget) {
-            console.log("resultTarget: ", this.resultTarget);
-            this.displayResults = []; // change on next when target changes
+        if(this._resultTarget) {
+            console.log("resultTarget: ", this._resultTarget);
         }
         if(this.results) { console.log("results callback: ", JSON.stringify(this.results)); }
     }

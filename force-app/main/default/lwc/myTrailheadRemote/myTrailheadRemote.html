@@ -15,7 +15,15 @@
       <template if:true={isTrailmixTarget}>
         <lightning-button label="Previous" onclick={previousHandler}></lightning-button>
       </template>
+
+      <template if:true={isNotTrailmixTarget}>
       <lightning-button label="Next" onclick={nextHandler}></lightning-button>
+      </template>
+
+      <template if:true={isTrailmixTarget}>
+        <lightning-button label="Submit" onclick={submitHandler}></lightning-button>
+      </template>
+
     </lightning-button-group>
   </lightning-card>
 </template>
